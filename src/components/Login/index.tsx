@@ -42,6 +42,7 @@ const Login = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
+        alert('회원가입이 완료되었습니다. 로그인 후 이용해주세요.');
       })
       .catch((error) => {
         console.log(error.code);
@@ -55,6 +56,7 @@ const Login = () => {
         navigate('/accountbook');
       })
       .catch((error) => {
+        alert(error.message);
         console.log(error.code);
       });
   };
