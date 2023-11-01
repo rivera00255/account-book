@@ -2,47 +2,76 @@ import { useMemo, useState } from 'react';
 import AddIcon from '../../assets/images/add.png';
 import Edit from '../../components/Edit';
 import AmountCard from '../../components/AmountCard';
-import { signOut } from 'firebase/auth';
 import { auth, db } from '../../lib/firebase';
-import { useNavigate } from 'react-router-dom';
-import { Query, collection, getDocs, query, where } from 'firebase/firestore';
+import { Query, collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { useQuery } from '@tanstack/react-query';
+import TotalAmountInfo from '../../components/TotalAmountInfo';
+import { signOut } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 const AccountBook = () => {
+  const [period, setPeriod] = useState(30);
   const [type, setType] = useState('');
   const [income, setIncome] = useState(0);
   const [expense, setExpense] = useState(0);
   const [isEdit, setIsEdit] = useState(false);
+
+  const uid = sessionStorage.getItem('uid');
   const navigate = useNavigate();
 
-  const getAccount = async (type: string) => {
-    if (fetchStatus === 'fetching' && !isFetched && type === '') {
+  const calcStartTime = (period: number) => {
+    if (period === 0) return;
+    let start = new Date().getTime();
+    if (period === 30) start -= 1000 * 60 * 60 * 24 * 30;
+    if (period === 90) start -= 1000 * 60 * 60 * 24 * 90;
+    return start;
+  };
+
+  const calcTotalAmount = (item: { [key: string]: any }) => {
+    item.accountType === 'income' && setIncome((prev) => prev + Number(item.amount));
+    item.accountType === 'expense' && setExpense((prev) => prev + Number(item.amount));
+  };
+
+  const getAccount = async (uid: string | null, type: string | undefined, period: number) => {
+    if (fetchStatus === 'fetching' && !isFetched) {
       setIncome(0);
       setExpense(0);
     }
     let list: { [key: string]: any }[] = [];
     let queryResponse: Query | undefined = undefined;
-    if (type !== '') {
+    const startTime = calcStartTime(period);
+    if (startTime) {
       queryResponse = query(
-        collection(db, 'account'),
-        where('accountType', '==', type),
-        where('userId', '==', auth.currentUser?.uid)
+        collection(db, uid ?? 'account'),
+        where('date', '>=', new Date(startTime)),
+        orderBy('date', 'desc')
       );
     } else {
-      queryResponse = query(collection(db, 'account'), where('userId', '==', auth.currentUser?.uid));
+      queryResponse = query(collection(db, uid ?? 'account'), orderBy('date', 'desc'));
     }
     const querySnapshot = await getDocs(queryResponse);
     querySnapshot.forEach((doc) => {
-      if (!isFetched && type === '') {
-        doc.data().accountType === 'income' && setIncome((prev) => prev + Number(doc.data().amount));
-        doc.data().accountType === 'expense' && setExpense((prev) => prev + Number(doc.data().amount));
+      if (type === '') {
+        list.push({ ...doc.data(), id: doc.id });
+      } else {
+        doc.data().accountType === type && list.push({ ...doc.data(), id: doc.id });
       }
-      list.push({ ...doc.data(), id: doc.id });
+      if (!isFetched) calcTotalAmount(doc.data());
     });
+    if (isFetched) {
+      setIncome(0);
+      setExpense(0);
+      startTime
+        ? list.forEach((item) => item.date.toDate().getTime() >= startTime && calcTotalAmount(item))
+        : list.forEach((item) => calcTotalAmount(item));
+    }
     return list;
   };
 
-  const { data, fetchStatus, isFetched } = useQuery({ queryKey: ['account', type], queryFn: () => getAccount(type) });
+  const { data, fetchStatus, isFetched } = useQuery({
+    queryKey: ['account', uid, type, period],
+    queryFn: () => getAccount(uid, type, period),
+  });
   // console.log(isFetched);
 
   const accounts = useMemo(() => {
@@ -55,34 +84,12 @@ const AccountBook = () => {
 
   return (
     <main className="container mx-auto max-w-960 py-8">
-      <div className="bg-slate-50 p-8 rounded">
-        <div className="flex items-center justify-center mb-4">
-          <select className="rounded px-4 py-2 text-sm">
-            <option>최근 1개월</option>
-            <option>최근 3개월</option>
-            <option>전체 내역</option>
-          </select>
-        </div>
-        <div className="flex items-center justify-around">
-          <span className="border rounded w-49% px-10 py-4 text-center">
-            <p>들어온 돈</p>
-            <p>
-              <strong className="text-blue-400">{income.toLocaleString()}</strong>
-            </p>
-          </span>
-          <span className="border rounded w-49% px-10 py-4 text-center">
-            <p>나간 돈</p>
-            <p>
-              <strong className="text-red-400">{expense.toLocaleString()}</strong>
-            </p>
-          </span>
-        </div>
-      </div>
+      <TotalAmountInfo income={income} expense={expense} setPeriod={setPeriod} />
       <div className=" bg-slate-50 p-8 rounded my-3">
         <ul className="flex items-center justify-end font-light">
           <li className="mr-5">
             <button
-              data-value={type === '' ? type : null}
+              data-value={type === '' ? '' : null}
               onClick={() => setType('')}
               className="data-[value]:font-medium">
               전체
@@ -120,14 +127,15 @@ const AccountBook = () => {
           <Edit isEdit={isEdit} setIsEdit={setIsEdit} />
         )}
       </div>
-      <button
+      {/* <button
         onClick={() => {
           signOut(auth);
+          sessionStorage.removeItem('uid');
           navigate('/');
         }}
-        className="text-sm my-4 hover:underline">
+        className="text-sm text-gray-500 hover:underline">
         로그아웃
-      </button>
+      </button> */}
     </main>
   );
 };

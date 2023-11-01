@@ -3,6 +3,7 @@ import App from './App';
 import Home from './pages';
 import AccountBook from './pages/accountbook';
 import { auth } from './lib/firebase';
+import Calendar from './pages/calendar';
 
 const AuthRoute = ({ children }: { children: JSX.Element }) => {
   const user = auth.currentUser;
@@ -16,10 +17,8 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { path: '/', element: <Home /> },
-      {
-        path: '/accountbook',
-        element: <AccountBook />,
-      },
+      { path: '/accountbook', element: <AccountBook /> },
+      { path: '/calendar', element: <Calendar /> },
     ],
   },
 ]);

@@ -10,16 +10,18 @@ const AmountCard = ({ item }: { item: { [key: string]: any } }) => {
   const [amount, setAmount] = useState<string>(item.amount);
   const descRef = useRef<HTMLInputElement>(null);
 
+  const uid = sessionStorage.getItem('uid');
+
   const queryClient = useQueryClient();
 
   const updateAccount = async ({ id, desc, amount }: { id: string; desc: string; amount: string }) => {
-    const account = doc(db, 'account', id);
+    const account = doc(db, uid ?? 'account', id);
     await updateDoc(account, { description: desc, amount: amount });
     setIsEdit(false);
   };
 
   const deleteAccount = async (id: string) => {
-    await deleteDoc(doc(db, 'account', id));
+    await deleteDoc(doc(db, uid ?? 'account', id));
     setIsEdit(false);
   };
 

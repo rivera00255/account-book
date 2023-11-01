@@ -15,11 +15,13 @@ const Edit = ({ isEdit, setIsEdit }: { isEdit: boolean; setIsEdit: Dispatch<SetS
   const [type, setType] = useState('');
   const [amount, setAmount] = useState('');
 
+  const uid = sessionStorage.getItem('uid');
+
   const queryClient = useQueryClient();
 
   const createAccount = async (accounts: Accounts) => {
     try {
-      const docRef = await addDoc(collection(db, 'account'), accounts);
+      const docRef = await addDoc(collection(db, uid ?? 'account'), accounts);
       if (docRef.id) setIsEdit(!isEdit);
     } catch (e) {
       console.error('Error adding document: ', e);
