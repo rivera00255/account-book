@@ -1,13 +1,14 @@
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import AddIcon from '../../assets/images/add.png';
 import Edit from '../../components/Edit';
 import AmountCard from '../../components/AmountCard';
-import { auth, db } from '../../lib/firebase';
+import { db } from '../../lib/firebase';
 import { Query, collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 import { useQuery } from '@tanstack/react-query';
 import TotalAmountInfo from '../../components/TotalAmountInfo';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../utilities/AuthProvider';
 
 const AccountBook = () => {
   const [period, setPeriod] = useState(30);
@@ -16,7 +17,7 @@ const AccountBook = () => {
   const [expense, setExpense] = useState(0);
   const [isEdit, setIsEdit] = useState(false);
 
-  const uid = sessionStorage.getItem('uid');
+  const user = useContext(AuthContext);
   const navigate = useNavigate();
 
   const calcStartTime = (period: number) => {
@@ -69,8 +70,8 @@ const AccountBook = () => {
   };
 
   const { data, fetchStatus, isFetched } = useQuery({
-    queryKey: ['account', uid, type, period],
-    queryFn: () => getAccount(uid, type, period),
+    queryKey: ['account', user.uid, type, period],
+    queryFn: () => getAccount(user.uid, type, period),
   });
   // console.log(isFetched);
 

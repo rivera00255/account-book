@@ -1,27 +1,28 @@
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { db } from '../../lib/firebase';
 import EditIcon from '../../assets/images/edit.svg';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addComma, strToUnccoma } from '../../utilities/format';
+import { AuthContext } from '../../utilities/AuthProvider';
 
 const AmountCard = ({ item }: { item: { [key: string]: any } }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [amount, setAmount] = useState<string>(item.amount);
   const descRef = useRef<HTMLInputElement>(null);
 
-  const uid = sessionStorage.getItem('uid');
+  const user = useContext(AuthContext);
 
   const queryClient = useQueryClient();
 
   const updateAccount = async ({ id, desc, amount }: { id: string; desc: string; amount: string }) => {
-    const account = doc(db, uid ?? 'account', id);
+    const account = doc(db, user.uid ?? 'account', id);
     await updateDoc(account, { description: desc, amount: amount });
     setIsEdit(false);
   };
 
   const deleteAccount = async (id: string) => {
-    await deleteDoc(doc(db, uid ?? 'account', id));
+    await deleteDoc(doc(db, user.uid ?? 'account', id));
     setIsEdit(false);
   };
 

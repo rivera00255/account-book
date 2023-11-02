@@ -2,7 +2,8 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../../utilities/AuthProvider';
 
 // const events = [{ title: 'Meeting', start: new Date() }];
 
@@ -11,7 +12,7 @@ const renderEventContent = (eventInfo: any) => {
 };
 
 const Calendar = () => {
-  const uid = sessionStorage.getItem('uid');
+  const user = useContext(AuthContext);
   const [events, setEvents] = useState<{ [key: string]: any }[]>([]);
 
   const handleEventTitle = (accounts: { [key: string]: any }) => {
@@ -33,7 +34,7 @@ const Calendar = () => {
   };
 
   useEffect(() => {
-    uid && getEventList(uid);
+    user.uid && getEventList(user.uid);
   }, []);
 
   return (

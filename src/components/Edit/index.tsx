@@ -1,9 +1,10 @@
 import { addDoc, collection } from 'firebase/firestore';
-import { Dispatch, SetStateAction, SyntheticEvent, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, SyntheticEvent, useContext, useRef, useState } from 'react';
 import { auth, db } from '../../lib/firebase';
 import { Accounts } from '../../type';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addComma, strToUnccoma } from '../../utilities/format';
+import { AuthContext } from '../../utilities/AuthProvider';
 
 const Edit = ({ isEdit, setIsEdit }: { isEdit: boolean; setIsEdit: Dispatch<SetStateAction<boolean>> }) => {
   const today = new Date();
@@ -15,13 +16,13 @@ const Edit = ({ isEdit, setIsEdit }: { isEdit: boolean; setIsEdit: Dispatch<SetS
   const [type, setType] = useState('');
   const [amount, setAmount] = useState('');
 
-  const uid = sessionStorage.getItem('uid');
+  const user = useContext(AuthContext);
 
   const queryClient = useQueryClient();
 
   const createAccount = async (accounts: Accounts) => {
     try {
-      const docRef = await addDoc(collection(db, uid ?? 'account'), accounts);
+      const docRef = await addDoc(collection(db, user.uid ?? 'account'), accounts);
       if (docRef.id) setIsEdit(!isEdit);
     } catch (e) {
       console.error('Error adding document: ', e);

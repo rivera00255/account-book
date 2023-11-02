@@ -1,6 +1,8 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { auth } from '../../lib/firebase';
 import { signOut } from 'firebase/auth';
+import { useContext } from 'react';
+import { AuthContext } from '../../utilities/AuthProvider';
 
 const mainNav = [
   { id: 1, path: '/accountbook', route: '가계부' },
@@ -10,16 +12,16 @@ const mainNav = [
 const Header = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const user = useContext(AuthContext);
 
   return (
     <header className="container xl mx-auto py-5 relative">
       <h1 className="text-center font-mono font-bold text-lg">Account Book</h1>
-      {sessionStorage.getItem('uid') && (
+      {user.uid && (
         <nav className="absolute top-4 right-0 flex flex-col items-end">
           <button
             onClick={() => {
               signOut(auth);
-              sessionStorage.removeItem('uid');
               navigate('/');
             }}
             className="text-sm text-gray-500 hover:underline">
