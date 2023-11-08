@@ -38,10 +38,6 @@ const Edit = ({ isEdit, setIsEdit }: { isEdit: boolean; setIsEdit: Dispatch<SetS
     e.preventDefault();
     const uncommaAmount = strToUnccoma(amount);
     if (Number(uncommaAmount) > 0) {
-      // const date = new Date(`${yearRef.current?.value}-${monthRef.current?.value}-${dayRef.current?.value}`)
-      //   .toLocaleDateString()
-      //   .replaceAll('. ', '-')
-      //   .replace('.', '');
       const date = new Date(`${yearRef.current?.value}-${monthRef.current?.value}-${dayRef.current?.value}`);
       const description = descRef.current?.value ?? '';
       const userId = auth.currentUser?.uid ?? '';

@@ -84,7 +84,6 @@ const AccountBook = () => {
     queryKey: ['account', user.uid, type, period],
     queryFn: () => getAccount(user.uid, type, period),
   });
-  // console.log(isPending);
 
   const accounts = useMemo(() => {
     return data?.slice(0, limit);

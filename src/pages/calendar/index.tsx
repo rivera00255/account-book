@@ -5,8 +5,6 @@ import { db } from '../../lib/firebase';
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../utilities/AuthProvider';
 
-// const events = [{ title: 'Meeting', start: new Date() }];
-
 const renderEventContent = (eventInfo: any) => {
   return <span className="bg-slate-100 w-full py-1 px-2">{eventInfo.event.title}</span>;
 };
