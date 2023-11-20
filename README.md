@@ -1,27 +1,23 @@
-# React + TypeScript + Vite
+# 가계부
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+지출 내역을 기록하고 파악하여 나의 소비 생활 알아보기
 
-Currently, two official plugins are available:
+### 🌱 1. 설치 및 실행 방법
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 설치 및 샐행
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+```
+npm install
+npm run dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### ✨ 2. 구현 목록
+
+- [x] 들어온 돈, 나간 돈 기록
+- [x] 기간별 지출 내역 조회
+- [x] 달력으로 일별, 월별 기록 조회
+- [x] 회원가입, 로그인 / 로그아웃
+
+### 💚 3. 사용한 프레임워크 및 라이브러리
+
+React, Typscript, Firebase, FullCalendar, TailwindCss
