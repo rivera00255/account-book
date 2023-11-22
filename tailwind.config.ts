@@ -17,6 +17,9 @@ export default {
       maxWidth: {
         '960': '960px',
       },
+      height: {
+        '90vh': '90vh',
+      },
     },
   },
   plugins: [],

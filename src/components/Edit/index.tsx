@@ -72,14 +72,14 @@ const Edit = ({ isEdit, setIsEdit }: { isEdit: boolean; setIsEdit: Dispatch<SetS
             type="button"
             onClick={() => setType('income')}
             data-value={type === 'income' ? type : null}
-            className="bg-slate-200 w-49% rounded py-2 data-[value]:bg-slate-300">
+            className="bg-slate-200 w-49% rounded py-2 text-gray-400 data-[value]:bg-slate-400 data-[value]:text-white">
             수입
           </button>
           <button
             type="button"
             onClick={() => setType('expense')}
             data-value={type === 'expense' ? type : null}
-            className="bg-slate-200 w-49% rounded py-2 data-[value]:bg-slate-300">
+            className="bg-slate-200 w-49% rounded py-2 text-gray-400 data-[value]:bg-slate-400 data-[value]:text-white">
             지출
           </button>
         </div>
@@ -95,7 +95,7 @@ const Edit = ({ isEdit, setIsEdit }: { isEdit: boolean; setIsEdit: Dispatch<SetS
         />
       </div>
       <div className="flex items-center justify-between mt-4 mb-2">
-        <button type="button" className="bg-slate-300 py-2 rounded w-33%">
+        <button type="button" className="bg-slate-300 py-2 rounded w-33%" onClick={() => setIsEdit(false)}>
           닫기
         </button>
         <button className="bg-slate-500 text-white py-2 rounded w-66%">등록하기</button>

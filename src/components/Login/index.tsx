@@ -67,7 +67,7 @@ const Login = () => {
   };
 
   return (
-    <div className="w-480 bg-slate-100 rounded flex flex-col items-center px-8 py-10 mx-auto mt-20">
+    <div className="w-480 bg-slate-100 rounded flex flex-col items-center px-8 py-10 mx-auto mt-10">
       <div className="flex items-center justify-center mb-3">
         <button
           data-select={selected === 'signin' ? selected : null}
